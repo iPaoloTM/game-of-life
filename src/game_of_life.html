@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game of Life simulation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+            .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(50, 10px);
+                grid-template-rows: repeat(50, 10px);
+                gap: 1px;
+                border: 1px solid #ccc;
+                background-color: black;
+                align-self: center;
+            }
+            .cell {
+                width: 10px;
+                height: 10px;
+                background-color: white;
+            }
+            .menu {
+                text-align: center;
+                margin-top: 20px;
+                background-color: blue;
+            }
+            .menu button {
+                margin: 5px;
+            }
+            .status {
+                text-align: center;
+                margin-top: 10px;
+            }
+        </style>
+</head>
+<body>
+  <div class="container">
+   <div class="menu">
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+        <button id="nextButton">Next Step</button>
+        <button id="resetButton">Reset</button>
+        <button id="rulesButton">Rules</button>
+    </div>
+
+    <div id="score">
+      <p><strong>Score: </strong>0</p>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <br>
+    <div class="status" id="status"></div>
+  </div>
+
+    <script>
+        const rows = 50;
+        const cols = 50;
+        const liveCell = 1;
+        const deadCell = 0;
+        let grid = new Array(rows).fill(null).map(() => new Array(cols).fill(deadCell));
+        let intervalId;
+        let isRunning = false;
+        let score = 0
+
+        const gridElement = document.getElementById("grid");
+        const startButton = document.getElementById("startButton");
+        const stopButton = document.getElementById("stopButton");
+        const nextButton = document.getElementById("nextButton");
+
+        function createCellElement(row, col) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.onclick = () => toggleCellState(row, col);
+            return cell;
+        }
+
+        function updateGridDisplay() {
+            gridElement.innerHTML = "";
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cellElement = createCellElement(i, j);
+                    cellElement.style.backgroundColor = grid[i][j] === liveCell ? "white" : "black";
+                    gridElement.appendChild(cellElement);
+                }
+            }
+        }
+
+        function toggleCellState(row, col) {
+            grid[row][col] = grid[row][col] === liveCell ? deadCell : liveCell;
+            updateGridDisplay();
+        }
+
+        function applyRules() {
+            const newGrid = new Array(rows).fill(null).map(() => new Array(cols).fill(deadCell));
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const liveNeighbors = countLiveNeighbors(i, j);
+                    if (grid[i][j] === liveCell) {
+                        if (liveNeighbors === 2 || liveNeighbors === 3) {
+                            newGrid[i][j] = liveCell;
+                        }
+                    } else {
+                        if (liveNeighbors === 3) {
+                            newGrid[i][j] = liveCell;
+                            // Check if the cell is transitioning from dead to alive
+                            if (grid[i][j] === deadCell) {
+                                score += 1;
+                            }
+                        }
+                    }
+                }
+            }
+            grid = newGrid;
+            document.getElementById("score").innerHTML = `<p><strong>Score: </strong>${score}</p>`;
+        }
+
+
+        function countLiveNeighbors(row, col) {
+            let count = 0;
+            for (let i = row - 1; i <= row + 1; i++) {
+                for (let j = col - 1; j <= col + 1; j++) {
+                    if (i >= 0 && i < rows && j >= 0 && j < cols && !(i === row && j === col)) {
+                        if (grid[i][j] === liveCell) {
+                            count++;
+                        }
+                    }
+                }
+            }
+            return count;
+        }
+
+        function startSimulation() {
+            if (!isRunning) {
+                isRunning = true;
+                document.getElementById("status").innerHTML='<p><strong>The simulation is running</strong></p>'
+                intervalId = setInterval(() => {
+                    applyRules();
+                    updateGridDisplay();
+                }, 200);
+            }
+        }
+
+        function stopSimulation() {
+            if (isRunning) {
+                isRunning = false;
+                document.getElementById("status").innerHTML='<p><strong>The simulation has stopped</strong></p>'
+                clearInterval(intervalId);
+            }
+        }
+
+        startButton.addEventListener("click", startSimulation);
+        stopButton.addEventListener("click", stopSimulation);
+        nextButton.addEventListener("click", () => {
+            applyRules();
+            updateGridDisplay();
+        });
+
+        const resetButton = document.getElementById("resetButton");
+        resetButton.addEventListener("click", () => {
+            score=0;
+            document.getElementById("score").innerHTML=`<p><strong>Score: </strong>${score}</p>`
+            stopSimulation();
+            grid = new Array(rows).fill(null).map(() => new Array(cols).fill(deadCell));
+            updateGridDisplay();
+        });
+
+        // Add event listener for the Rules button
+        const rulesButton = document.getElementById("rulesButton");
+        rulesButton.addEventListener("click", () => {
+            alert("Conway's Game of Life Rules:\n\n The universe of the Game of Life is an infinite two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, alive or dead, or'populated' or 'unpopulated'. Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:\n\nAny live cell with fewer than two live neighbours dies, as if caused by underpopulation. \n\n Any live cell with two or three live neighbours lives on to the next generation. \n\n Any live cell with more than three live neighbours dies, as if by overpopulation. \n\n  Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction. \n\n The initial pattern constitutes the seed of the system. The first generation is created by applying the above rules simultaneously to every cell, and the rules keep getting applied on and on."
+                );
+              });
+
+        updateGridDisplay();
+    </script>
+</body>
+</html>
