@@ -37,6 +37,10 @@ const deadCell = 0;
 // ... (other variables and functions)
 ```
 
+## Development
+
+This project is still undergoing many changes: the main goal is to provide an entertaining tool to simulate Conway's Game of Life in an interactive way, by finding the "best" starting configuration and find out the amazing and complex pattern that can be discovered. New features are going to be added like longest streak, pre-load starting configuration and... so on!
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
