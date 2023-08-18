@@ -2,7 +2,7 @@
 
 Conway's Game of Life is a cellular automaton simulation that demonstrates emergent behavior from simple rules. Cells on a grid evolve over generations based on the state of their neighbors.
 
-![output](![output](https://github.com/iPaoloTM/game-of-life/assets/43711362/edd75174-c24e-49c0-9786-e5277a94c940)
+![output](https://github.com/iPaoloTM/game-of-life/assets/43711362/edd75174-c24e-49c0-9786-e5277a94c940)
 
 ## Getting Started
 
