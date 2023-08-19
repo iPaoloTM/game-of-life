@@ -25,11 +25,20 @@
                 height: 10px;
                 background-color: white;
             }
-            .menu {
-                text-align: center;
-                margin-top: 20px;
-                background-color: blue;
+            .menu button {
+                margin: 5px;
+                background-color: #28a745;
+                border: none;
+                color: white;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
             }
+
+            .menu button:hover {
+                background-color: #218838;
+            }
+
             .menu button {
                 margin: 5px;
             }
@@ -39,7 +48,7 @@
             }
         </style>
 </head>
-<body>
+<body style="background-color: #232324">
   <div class="container">
    <div class="menu">
         <button id="startButton">Start</button>
@@ -47,15 +56,17 @@
         <button id="nextButton">Next Step</button>
         <button id="resetButton">Reset</button>
         <button id="rulesButton">Rules</button>
+        <button id="randomButton">Random</button>
     </div>
 
-    <div id="score">
+    <div class="score" id="score" style="color: white">
       <p><strong>Score: </strong>0</p>
     </div>
 
+    <div class="status" id="status" style="color: white"></div>
+
     <div class="grid" id="grid"></div>
-    <br>
-    <div class="status" id="status"></div>
+
   </div>
 
     <script>
@@ -72,6 +83,22 @@
         const startButton = document.getElementById("startButton");
         const stopButton = document.getElementById("stopButton");
         const nextButton = document.getElementById("nextButton");
+        const randomButton = document.getElementById("randomButton");
+
+        
+
+        randomButton.addEventListener("click", generateRandomCells);
+
+        function generateRandomCells() {
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    grid[i][j] = Math.random() < 0.5 ? liveCell : deadCell;
+                }
+            }
+            updateGridDisplay();
+            score = 0;
+            document.getElementById("score").innerHTML = `<p><strong>Score: </strong>${score}</p>`;
+        }
 
         function createCellElement(row, col) {
             const cell = document.createElement("div");
