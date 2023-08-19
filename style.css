@@ -1,0 +1,75 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(50, 10px);
+    grid-template-rows: repeat(50, 10px);
+    gap: 1px;
+    border: 1px solid #ccc;
+    background-color: black;
+    align-self: center;
+}
+.cell {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+}
+.header {
+  color: white;
+  font-size: 20px;
+  font-style: oblique;
+  text-align: center;
+  padding: 5px 10px;
+  background-color: #218838;
+}
+.menu button {
+    margin: 5px;
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.menu button:hover {
+    background-color: #218838;
+}
+
+.menu button {
+    margin: 5px;
+}
+
+#stopButton {
+  background-color: #294a31;
+}
+
+.recording-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    animation: blink 1s infinite;
+    margin-right: 10px;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+
+.footer {
+  text-align: center;
+  color: grey;
+  font-size: 10px;
+}
